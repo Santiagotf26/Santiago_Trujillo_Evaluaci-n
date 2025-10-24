@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Servicios - Spa Wellness</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" th:href="@{/assets/img/apple-icon.png}">
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/assets/img/favicon.ico}">
+
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/templatemo.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/custom.css}">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet" th:href="@{/assets/css/fontawesome.min.css}">
+</head>
+
+<body>
+    <!-- Start Top Nav -->
+    <nav class="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block" id="templatemo_nav_top">
+        <div class="container text-light">
+            <div class="w-100 d-flex justify-content-between">
+                <div>
+                    <i class="fa fa-envelope mx-2"></i>
+                    <a class="navbar-sm-brand text-light text-decoration-none" href="mailto:info@company.com">info@company.com</a>
+                    <i class="fa fa-phone mx-2"></i>
+                    <a class="navbar-sm-brand text-light text-decoration-none" href="tel:010-020-0340">010-020-0340</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Close Top Nav -->
+
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-light shadow">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand text-success logo h1 align-self-center" th:href="@{/}">
+                Spa Wellness
+            </a>
+
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#templatemo_main_nav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="align-self-center collapse navbar-collapse flex-fill d-lg-flex justify-content-lg-between" id="templatemo_main_nav">
+                <div class="flex-fill">
+                    <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/}">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/about}">Nosotros</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" th:href="@{/servicios}">Servicios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/contact}">Contacto</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Usuario logueado -->
+                <div class="navbar align-self-center d-flex align-items-center">
+                    <span class="text-success me-3">
+                        <i class="fa fa-user-circle fa-lg"></i> 
+                        <strong><span th:text="${nombreUsuario}"></span></strong>
+                    </span>
+                    <a th:href="@{/usuarios/logout}" class="btn btn-outline-danger btn-sm">
+                        <i class="fa fa-sign-out-alt"></i> Cerrar Sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Close Header -->
+
+    <!-- Start Content Page -->
+    <div class="container-fluid bg-success py-5 text-white">
+        <div class="col-md-8 m-auto text-center">
+            <h1 class="h1">Nuestros Servicios</h1>
+            <p>Bienvenido/a <strong><span th:text="${nombreUsuario}"></span></strong>, explora nuestros servicios y reserva tu cita</p>
+        </div>
+    </div>
+
+    <!-- Filtros y búsqueda -->
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-md-8">
+                <!-- Barra de búsqueda -->
+                <form th:action="@{/servicios}" method="get" class="d-flex">
+                    <input type="text" name="buscar" class="form-control me-2" 
+                           th:value="${buscar}" placeholder="Buscar servicios...">
+                    <input type="hidden" name="size" th:value="${size}">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fa fa-search"></i> Buscar
+                    </button>
+                    <a th:href="@{/servicios(size=${size})}" class="btn btn-outline-secondary ms-2">
+                        <i class="fa fa-times"></i> Limpiar
+                    </a>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <!-- Selector de elementos por página -->
+                <form th:action="@{/servicios}" method="get" class="d-flex align-items-center">
+                    <label class="me-2 text-nowrap">Mostrar:</label>
+                    <select name="size" class="form-select" onchange="this.form.submit()">
+                        <option value="3" th:selected="${size == 3}">3</option>
+                        <option value="6" th:selected="${size == 6}">6</option>
+                        <option value="9" th:selected="${size == 9}">9</option>
+                        <option value="12" th:selected="${size == 12}">12</option>
+                    </select>
+                    <input type="hidden" name="buscar" th:value="${buscar}">
+                </form>
+            </div>
+        </div>
+        
+        <!-- Información de resultados -->
+        <div class="row mt-3">
+            <div class="col-12">
+                <p class="text-muted">
+                    Mostrando <strong><span th:text="${#lists.size(servicios)}"></span></strong> 
+                    de <strong><span th:text="${totalElements}"></span></strong> servicios
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start Services -->
+    <div class="container pb-5">
+        <div class="row">
+            
+            <!-- Iterar sobre los servicios desde la base de datos -->
+            <div th:each="servicio : ${servicios}" class="col-12 col-md-4 mb-4">
+                <div class="card h-100 shadow">
+                    <img th:src="@{/assets/img/feature_prod_01.jpg}" class="card-img-top" alt="Servicio">
+                    <div class="card-body">
+                        <h3 class="card-title text-success" th:text="${servicio.nombre}">Nombre del Servicio</h3>
+                        <p class="card-text" th:text="${servicio.descripcion}">
+                            Descripción del servicio
+                        </p>
+                        <ul class="list-unstyled">
+                            <li>
+                                <i class="fa fa-clock text-success"></i> 
+                                Duración: <strong><span th:text="${servicio.duracion}">60 min</span></strong>
+                            </li>
+                            <li>
+                                <i class="fa fa-dollar-sign text-success"></i> 
+                                Precio: <strong>$<span th:text="${#numbers.formatDecimal(servicio.precio, 1, 2)}">0.00</span></strong>
+                            </li>
+                        </ul>
+                        <div class="d-grid gap-2">
+                            <a th:href="@{/servicios/{id}(id=${servicio.id})}" class="btn btn-outline-success">
+                                <i class="fa fa-eye"></i> Ver Detalles
+                            </a>
+							<a th:href="@{/citas/reservar/{id}(id=${servicio.id})}" class="btn btn-success">
+							    <i class="fa fa-calendar-check"></i> Reservar Cita
+							</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mensaje si no hay servicios -->
+            <div th:if="${#lists.isEmpty(servicios)}" class="col-12">
+                <div class="alert alert-info text-center">
+                    <h4><i class="fa fa-info-circle"></i> No se encontraron servicios</h4>
+                    <p th:if="${buscar != null}">No hay servicios que coincidan con "<strong><span th:text="${buscar}"></span></strong>"</p>
+                    <p th:unless="${buscar != null}">No hay servicios disponibles en este momento</p>
+                    <a th:href="@{/servicios}" class="btn btn-success">Ver todos los servicios</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Paginación -->
+        <div class="row mt-4" th:if="${totalPages > 1}">
+            <div class="col-12">
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        <!-- Primera página -->
+                        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                            <a class="page-link" th:href="@{/servicios(page=0, size=${size}, buscar=${buscar})}">
+                                <i class="fa fa-angle-double-left"></i>
+                            </a>
+                        </li>
+                        
+                        <!-- Página anterior -->
+                        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                            <a class="page-link" th:href="@{/servicios(page=${currentPage - 1}, size=${size}, buscar=${buscar})}">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        </li>
+                        
+                        <!-- Números de página -->
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                            th:classappend="${i == currentPage} ? 'active'">
+                            <a class="page-link" th:href="@{/servicios(page=${i}, size=${size}, buscar=${buscar})}" 
+                               th:text="${i + 1}">1</a>
+                        </li>
+                        
+                        <!-- Página siguiente -->
+                        <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+                            <a class="page-link" th:href="@{/servicios(page=${currentPage + 1}, size=${size}, buscar=${buscar})}">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                        
+                        <!-- Última página -->
+                        <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+                            <a class="page-link" th:href="@{/servicios(page=${totalPages - 1}, size=${size}, buscar=${buscar})}">
+                                <i class="fa fa-angle-double-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- End Services -->
+
+    <!-- Start Footer -->
+    <footer class="bg-dark" id="tempaltemo_footer">
+        <div class="w-100 bg-black py-3">
+            <div class="container">
+                <div class="row pt-2">
+                    <div class="col-12">
+                        <p class="text-left text-light">
+                            Copyright &copy; 2025 Spa Wellness
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End Footer -->
+
+    <!-- Start Script -->
+    <script th:src="@{/assets/js/jquery-1.11.0.min.js}"></script>
+    <script th:src="@{/assets/js/bootstrap.bundle.min.js}"></script>
+    <!-- End Script -->
+</body>
+
+</html>
