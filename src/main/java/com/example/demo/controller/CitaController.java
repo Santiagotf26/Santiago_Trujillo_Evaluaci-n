@@ -43,7 +43,7 @@ public class CitaController {
         Optional<Servicio> servicioOpt = servicioService.buscarPorId(servicioId);
         
         if (servicioOpt.isEmpty()) {
-            return "redirect:/servicios";
+            return "redirect:/servicios?error=servicio";
         }
         
         model.addAttribute("servicio", servicioOpt.get());
@@ -92,14 +92,30 @@ public class CitaController {
             
             cita.setEstado("PENDIENTE");
             
-            // Guardar la cita
+            // Guardar la cita en la base de datos
             citaService.guardar(cita);
             
             return "redirect:/citas/mis-citas?success";
             
         } catch (Exception e) {
+            e.printStackTrace();
             return "redirect:/servicios?error=reserva";
         }
     }
-
+    
+    // Ver mis citas
+    @GetMapping("/mis-citas")
+    public String misCitas(Model model, HttpSession session) {
+        
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        
+        if (usuario == null) {
+            return "redirect:/login?required";
+        }
+        
+        model.addAttribute("citas", citaService.listarPorUsuario(usuario));
+        model.addAttribute("nombreUsuario", session.getAttribute("nombreUsuario"));
+        
+        return "mis-citas";
+    }
 }

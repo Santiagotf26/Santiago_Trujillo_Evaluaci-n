@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Mis Citas - Spa Wellness</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" th:href="@{/assets/img/apple-icon.png}">
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/assets/img/favicon.ico}">
+
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/templatemo.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/custom.css}">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet" th:href="@{/assets/css/fontawesome.min.css}">
+</head>
+
+<body>
+    <!-- Top Nav -->
+    <nav class="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block">
+        <div class="container text-light">
+            <div class="w-100 d-flex justify-content-between">
+                <div>
+                    <i class="fa fa-envelope mx-2"></i>
+                    <a class="navbar-sm-brand text-light text-decoration-none" href="mailto:info@company.com">info@company.com</a>
+                    <i class="fa fa-phone mx-2"></i>
+                    <a class="navbar-sm-brand text-light text-decoration-none" href="tel:010-020-0340">010-020-0340</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-light shadow">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand text-success logo h1" th:href="@{/}">
+                Spa Wellness
+            </a>
+
+            <div class="navbar align-self-center">
+                <span class="text-success me-3">
+                    <i class="fa fa-user-circle fa-lg"></i> 
+                    <strong th:text="${nombreUsuario}">Usuario</strong>
+                </span>
+                <a th:href="@{/usuarios/logout}" class="btn btn-outline-danger btn-sm">
+                    <i class="fa fa-sign-out-alt"></i> Cerrar Sesión
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="container py-5">
+        
+        <h2 class="text-success mb-4">
+            <i class="fa fa-calendar-alt"></i> Mis Citas Agendadas
+        </h2>
+        
+        <!-- Mensaje de éxito -->
+        <div th:if="${param.success}" class="alert alert-success alert-dismissible fade show">
+            <strong>¡Cita reservada exitosamente!</strong> Tu cita ha sido agendada.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <!-- Lista de citas -->
+        <div class="row">
+            <div th:each="cita : ${citas}" class="col-md-6 mb-4">
+                <div class="card shadow">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="fa fa-calendar-check"></i>
+                            <span th:text="${cita.servicio.nombre}">Servicio</span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            <i class="fa fa-clock text-success"></i>
+                            <strong>Fecha:</strong> 
+                            <span th:text="${#temporals.format(cita.fechaHora, 'dd/MM/yyyy HH:mm')}"></span>
+                        </p>
+                        <p>
+                            <i class="fa fa-user-md text-success"></i>
+                            <strong>Profesional:</strong> 
+                            <span th:text="${cita.profesional.especialidad}">Profesional</span>
+                        </p>
+                        <p>
+                            <i class="fa fa-info-circle text-success"></i>
+                            <strong>Estado:</strong> 
+                            <span class="badge bg-warning text-dark" th:text="${cita.estado}">PENDIENTE</span>
+                        </p>
+                        <p>
+                            <i class="fa fa-dollar-sign text-success"></i>
+                            <strong>Precio:</strong> 
+                            $<span th:text="${cita.servicio.precio}">0.00</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mensaje si no hay citas -->
+            <div th:if="${#lists.isEmpty(citas)}" class="col-12">
+                <div class="alert alert-info text-center">
+                    <h4><i class="fa fa-calendar-times"></i> No tienes citas agendadas</h4>
+                    <p>Explora nuestros servicios y agenda tu primera cita</p>
+                    <a th:href="@{/servicios}" class="btn btn-success">
+                        <i class="fa fa-spa"></i> Ver Servicios
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <a th:href="@{/servicios}" class="btn btn-outline-success">
+                <i class="fa fa-arrow-left"></i> Volver a Servicios
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark mt-5">
+        <div class="w-100 bg-black py-3">
+            <div class="container">
+                <p class="text-left text-light">
+                    Copyright &copy; 2025 Spa Wellness
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script th:src="@{/assets/js/jquery-1.11.0.min.js}"></script>
+    <script th:src="@{/assets/js/bootstrap.bundle.min.js}"></script>
+</body>
+
+</html>

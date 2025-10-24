@@ -8,5 +8,10 @@ import java.util.List;
 
 @Repository
 public interface CitaRepository extends JpaRepository<Cita, Long> {
+    
+    // Buscar citas por usuario
     List<Cita> findByUsuario(Usuario usuario);
+    
+    // Buscar citas por usuario ordenadas por fecha descendente
+    List<Cita> findByUsuarioOrderByFechaHoraDesc(Usuario usuario);
 }
