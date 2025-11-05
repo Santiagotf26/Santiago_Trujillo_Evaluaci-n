@@ -17,9 +17,13 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
     
-    // Guardar usuario en la base de datos
+    // Guardar/actualizar usuario en la base de datos
     public Usuario registrar(Usuario usuario) {
-        // Aquí puedes agregar encriptación de contraseña más adelante
+        return usuarioRepository.save(usuario);
+    }
+    
+    // Actualizar usuario (igual que registrar, JPA detecta si existe por el ID)
+    public Usuario actualizar(Usuario usuario) {
         return usuarioRepository.save(usuario);
     }
     
@@ -33,13 +37,18 @@ public class UsuarioService {
         return usuarioRepository.findByEmail(email);
     }
     
+    // Buscar usuario por ID
+    public Optional<Usuario> buscarPorId(Long id) {
+        return usuarioRepository.findById(id);
+    }
+    
     // Listar todos los usuarios
     public List<Usuario> listarTodos() {
         return usuarioRepository.findAll();
     }
     
-    // Buscar usuario por ID
-    public Optional<Usuario> buscarPorId(Long id) {
-        return usuarioRepository.findById(id);
+    // Eliminar usuario por ID
+    public void eliminar(Long id) {
+        usuarioRepository.deleteById(id);
     }
 }

@@ -15,122 +15,335 @@
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
     <link rel="stylesheet" th:href="@{/assets/css/fontawesome.min.css}">
+    
+    <style>
+        .cita-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-left: 4px solid #59ab6e;
+        }
+        .cita-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .badge-pendiente {
+            background-color: #ffc107;
+            color: #000;
+        }
+        .badge-confirmada {
+            background-color: #28a745;
+        }
+        .badge-cancelada {
+            background-color: #dc3545;
+        }
+        .badge-completada {
+            background-color: #6c757d;
+        }
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+            color: #6c757d;
+        }
+        .empty-state i {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Top Nav -->
-    <nav class="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block">
+    <!-- Start Top Nav -->
+    <nav class="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block" id="templatemo_nav_top">
         <div class="container text-light">
             <div class="w-100 d-flex justify-content-between">
                 <div>
                     <i class="fa fa-envelope mx-2"></i>
-                    <a class="navbar-sm-brand text-light text-decoration-none" href="mailto:info@company.com">info@company.com</a>
+                    <a class="navbar-sm-brand text-light text-decoration-none" href="mailto:info@spawellness.com">info@spawellness.com</a>
                     <i class="fa fa-phone mx-2"></i>
                     <a class="navbar-sm-brand text-light text-decoration-none" href="tel:010-020-0340">010-020-0340</a>
                 </div>
             </div>
         </div>
     </nav>
+    <!-- Close Top Nav -->
 
     <!-- Header -->
     <nav class="navbar navbar-expand-lg navbar-light shadow">
         <div class="container d-flex justify-content-between align-items-center">
-            <a class="navbar-brand text-success logo h1" th:href="@{/}">
-                Spa Wellness
+            <a class="navbar-brand text-success logo h1 align-self-center" th:href="@{/}">
+                <i class="fa fa-spa me-2"></i>Spa Wellness
             </a>
 
-            <div class="navbar align-self-center">
-                <span class="text-success me-3">
-                    <i class="fa fa-user-circle fa-lg"></i> 
-                    <strong th:text="${nombreUsuario}">Usuario</strong>
-                </span>
-                <a th:href="@{/usuarios/logout}" class="btn btn-outline-danger btn-sm">
-                    <i class="fa fa-sign-out-alt"></i> Cerrar Sesión
-                </a>
-            </div>
-        </div>
-    </nav>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#templatemo_main_nav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-    <!-- Content -->
-    <div class="container py-5">
-        
-        <h2 class="text-success mb-4">
-            <i class="fa fa-calendar-alt"></i> Mis Citas Agendadas
-        </h2>
-        
-        <!-- Mensaje de éxito -->
-        <div th:if="${param.success}" class="alert alert-success alert-dismissible fade show">
-            <strong>¡Cita reservada exitosamente!</strong> Tu cita ha sido agendada.
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        
-        <!-- Lista de citas -->
-        <div class="row">
-            <div th:each="cita : ${citas}" class="col-md-6 mb-4">
-                <div class="card shadow">
-                    <div class="card-header bg-success text-white">
-                        <h5 class="mb-0">
-                            <i class="fa fa-calendar-check"></i>
-                            <span th:text="${cita.servicio.nombre}">Servicio</span>
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <p>
-                            <i class="fa fa-clock text-success"></i>
-                            <strong>Fecha:</strong> 
-                            <span th:text="${#temporals.format(cita.fechaHora, 'dd/MM/yyyy HH:mm')}"></span>
-                        </p>
-                        <p>
-                            <i class="fa fa-user-md text-success"></i>
-                            <strong>Profesional:</strong> 
-                            <span th:text="${cita.profesional.especialidad}">Profesional</span>
-                        </p>
-                        <p>
-                            <i class="fa fa-info-circle text-success"></i>
-                            <strong>Estado:</strong> 
-                            <span class="badge bg-warning text-dark" th:text="${cita.estado}">PENDIENTE</span>
-                        </p>
-                        <p>
-                            <i class="fa fa-dollar-sign text-success"></i>
-                            <strong>Precio:</strong> 
-                            $<span th:text="${cita.servicio.precio}">0.00</span>
-                        </p>
-                    </div>
+            <div class="align-self-center collapse navbar-collapse flex-fill d-lg-flex justify-content-lg-between" id="templatemo_main_nav">
+                <div class="flex-fill">
+                    <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/}">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/about}">Nosotros</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/servicios}">Servicios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" th:href="@{/citas/mis-citas}">Mis Citas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/contact}">Contacto</a>
+                        </li>
+                    </ul>
                 </div>
-            </div>
-            
-            <!-- Mensaje si no hay citas -->
-            <div th:if="${#lists.isEmpty(citas)}" class="col-12">
-                <div class="alert alert-info text-center">
-                    <h4><i class="fa fa-calendar-times"></i> No tienes citas agendadas</h4>
-                    <p>Explora nuestros servicios y agenda tu primera cita</p>
-                    <a th:href="@{/servicios}" class="btn btn-success">
-                        <i class="fa fa-spa"></i> Ver Servicios
+                
+                <!-- Usuario logueado -->
+                <div class="navbar align-self-center d-flex align-items-center">
+                    <span class="text-success me-3">
+                        <i class="fa fa-user-circle fa-lg"></i> 
+                        <strong><span th:text="${nombreUsuario}"></span></strong>
+                    </span>
+                    <a th:href="@{/usuarios/logout}" class="btn btn-outline-danger btn-sm">
+                        <i class="fa fa-sign-out-alt"></i> Cerrar Sesión
                     </a>
                 </div>
             </div>
         </div>
-        
-        <div class="mt-4">
-            <a th:href="@{/servicios}" class="btn btn-outline-success">
-                <i class="fa fa-arrow-left"></i> Volver a Servicios
-            </a>
+    </nav>
+    <!-- Close Header -->
+
+    <!-- Start Content Page -->
+    <div class="container-fluid bg-success py-5 text-white">
+        <div class="col-md-8 m-auto text-center">
+            <h1 class="h1"><i class="fa fa-calendar-check"></i> Mis Citas</h1>
+            <p>Gestiona y visualiza todas tus citas programadas</p>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-dark mt-5">
+    <!-- Main Content -->
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-12">
+                <!-- Mensajes de éxito/error -->
+                <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+                    <i class="fa fa-check-circle"></i> 
+                    <strong th:text="${success}"></strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+                    <i class="fa fa-exclamation-triangle"></i> 
+                    <strong th:text="${error}"></strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+
+                <!-- Estadísticas rápidas -->
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-warning text-white">
+                            <div class="card-body text-center">
+                                <h3 class="mb-0"><span th:text="${#lists.size(citas.?[estado == 'PENDIENTE'])}">0</span></h3>
+                                <p class="mb-0">Pendientes</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-success text-white">
+                            <div class="card-body text-center">
+                                <h3 class="mb-0"><span th:text="${#lists.size(citas.?[estado == 'CONFIRMADA'])}">0</span></h3>
+                                <p class="mb-0">Confirmadas</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-secondary text-white">
+                            <div class="card-body text-center">
+                                <h3 class="mb-0"><span th:text="${#lists.size(citas.?[estado == 'COMPLETADA'])}">0</span></h3>
+                                <p class="mb-0">Completadas</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-danger text-white">
+                            <div class="card-body text-center">
+                                <h3 class="mb-0"><span th:text="${#lists.size(citas.?[estado == 'CANCELADA'])}">0</span></h3>
+                                <p class="mb-0">Canceladas</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de citas -->
+                <div class="row">
+                    <div th:each="cita : ${citas}" class="col-md-6 col-lg-4 mb-4">
+                        <div class="card cita-card h-100 shadow-sm">
+                            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="fa fa-calendar"></i> 
+                                    Cita #<span th:text="${cita.id}"></span>
+                                </h5>
+                                <span class="badge" 
+                                      th:classappend="${cita.estado == 'PENDIENTE'} ? 'badge-pendiente' : 
+                                                      ${cita.estado == 'CONFIRMADA'} ? 'badge-confirmada' : 
+                                                      ${cita.estado == 'COMPLETADA'} ? 'badge-completada' : 'badge-cancelada'"
+                                      th:text="${cita.estado}">
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title text-success" th:text="${cita.servicio.nombre}">Servicio</h5>
+                                
+                                <hr>
+                                
+                                <div class="mb-2">
+                                    <i class="fa fa-user-md text-success me-2"></i>
+                                    <strong>Profesional:</strong><br>
+                                    <span class="ms-4" th:text="${cita.profesional.especialidad}">Especialidad</span>
+                                    <span th:if="${cita.profesional.usuario != null}" 
+                                          class="text-muted d-block ms-4" 
+                                          th:text="${cita.profesional.usuario.nombre}">
+                                    </span>
+                                </div>
+                                
+                                <div class="mb-2">
+                                    <i class="far fa-calendar text-success me-2"></i>
+                                    <strong>Fecha:</strong><br>
+                                    <span class="ms-4" th:text="${#temporals.format(cita.fechaHora, 'dd/MM/yyyy')}">01/01/2025</span>
+                                </div>
+                                
+                                <div class="mb-2">
+                                    <i class="far fa-clock text-success me-2"></i>
+                                    <strong>Hora:</strong><br>
+                                    <span class="ms-4" th:text="${#temporals.format(cita.fechaHora, 'HH:mm')}">10:00</span>
+                                </div>
+                                
+                                <div class="mb-2">
+                                    <i class="fa fa-clock text-success me-2"></i>
+                                    <strong>Duración:</strong><br>
+                                    <span class="ms-4" th:text="${cita.servicio.duracion}">60 min</span>
+                                </div>
+                                
+                                <div class="mb-0">
+                                    <i class="fa fa-dollar-sign text-success me-2"></i>
+                                    <strong>Precio:</strong><br>
+                                    <span class="ms-4">$<span th:text="${#numbers.formatDecimal(cita.servicio.precio, 1, 2)}">0.00</span></span>
+                                </div>
+                            </div>
+                            
+                            <div class="card-footer bg-light" th:if="${cita.estado == 'PENDIENTE'}">
+                                <button type="button" 
+                                        class="btn btn-danger btn-sm w-100"
+                                        data-bs-toggle="modal" 
+                                        th:attr="data-bs-target='#cancelarCitaModal' + ${cita.id}">
+                                    <i class="fa fa-times"></i> Cancelar Cita
+                                </button>
+                                
+                                <!-- Modal de Confirmación -->
+                                <div class="modal fade" th:id="'cancelarCitaModal' + ${cita.id}" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-danger text-white">
+                                                <h5 class="modal-title">
+                                                    <i class="fa fa-exclamation-triangle"></i> Confirmar Cancelación
+                                                </h5>
+                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="mb-3">
+                                                    ¿Estás seguro de que deseas cancelar esta cita?
+                                                </p>
+                                                <div class="alert alert-info">
+                                                    <strong>Servicio:</strong> <span th:text="${cita.servicio.nombre}"></span><br>
+                                                    <strong>Fecha:</strong> <span th:text="${#temporals.format(cita.fechaHora, 'dd/MM/yyyy HH:mm')}"></span>
+                                                </div>
+                                                <p class="text-muted small mb-0">
+                                                    Esta acción no se puede deshacer.
+                                                </p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    No, mantener cita
+                                                </button>
+                                                <a th:href="@{/citas/cancelar/{id}(id=${cita.id})}" 
+                                                   class="btn btn-danger">
+                                                    <i class="fa fa-times"></i> Sí, cancelar
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card-footer bg-light text-muted" 
+                                 th:if="${cita.estado == 'CONFIRMADA'}">
+                                <i class="fa fa-info-circle"></i> 
+                                <small>Tu cita ha sido confirmada. Por favor, llega 10 minutos antes.</small>
+                            </div>
+                            
+                            <div class="card-footer bg-light text-muted" 
+                                 th:if="${cita.estado == 'COMPLETADA'}">
+                                <i class="fa fa-check-circle"></i> 
+                                <small>Cita completada. ¡Gracias por preferirnos!</small>
+                            </div>
+                            
+                            <div class="card-footer bg-light text-muted" 
+                                 th:if="${cita.estado == 'CANCELADA'}">
+                                <i class="fa fa-ban"></i> 
+                                <small>Esta cita fue cancelada.</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sin citas -->
+                    <div th:if="${#lists.isEmpty(citas)}" class="col-12">
+                        <div class="empty-state">
+                            <i class="fa fa-calendar-times"></i>
+                            <h3>No tienes citas agendadas</h3>
+                            <p class="text-muted mb-4">Explora nuestros servicios y agenda tu primera cita</p>
+                            <a th:href="@{/servicios}" class="btn btn-success btn-lg">
+                                <i class="fa fa-search"></i> Ver Servicios Disponibles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Botones de acción -->
+                <div class="row mt-4" th:unless="${#lists.isEmpty(citas)}">
+                    <div class="col-12 text-center">
+                        <a th:href="@{/servicios}" class="btn btn-success btn-lg me-2">
+                            <i class="fa fa-plus"></i> Agendar Nueva Cita
+                        </a>
+                        <a th:href="@{/}" class="btn btn-outline-secondary btn-lg">
+                            <i class="fa fa-home"></i> Volver al Inicio
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Content -->
+
+    <!-- Start Footer -->
+    <footer class="bg-dark" id="tempaltemo_footer">
         <div class="w-100 bg-black py-3">
             <div class="container">
-                <p class="text-left text-light">
-                    Copyright &copy; 2025 Spa Wellness
-                </p>
+                <div class="row pt-2">
+                    <div class="col-12">
+                        <p class="text-left text-light">
+                            Copyright &copy; 2025 Spa Wellness | Todos los derechos reservados
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
+    <!-- End Footer -->
 
+    <!-- Start Script -->
     <script th:src="@{/assets/js/jquery-1.11.0.min.js}"></script>
     <script th:src="@{/assets/js/bootstrap.bundle.min.js}"></script>
+    <!-- End Script -->
 </body>
 
 </html>

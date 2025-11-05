@@ -30,9 +30,8 @@ public class UsuarioController {
     // Procesar el registro del usuario
     @PostMapping("/registro")
     public String registrarUsuario(@Valid @ModelAttribute("usuario") Usuario usuario,
-                                   BindingResult result,
-                                   Model model) {
-        
+                                    BindingResult result,
+                                    Model model) {
         if (result.hasErrors()) {
             return "registro";
         }
@@ -46,13 +45,12 @@ public class UsuarioController {
         return "redirect:/usuarios/registro?success";
     }
     
-    // Procesar login - Validar usuario y contraseña de la BD
+    // ✅ ACTUALIZADO: Procesar login con redirección según rol
     @PostMapping("/login")
     public String procesarLogin(@RequestParam String email,
-                               @RequestParam String password,
-                               HttpSession session,
-                               Model model) {
-        
+                                @RequestParam String password,
+                                HttpSession session,
+                                Model model) {
         // Buscar usuario por email en la base de datos
         Optional<Usuario> usuarioOpt = usuarioService.buscarPorEmail(email);
         
@@ -65,9 +63,16 @@ public class UsuarioController {
                 session.setAttribute("usuarioLogueado", usuario);
                 session.setAttribute("nombreUsuario", usuario.getNombre());
                 session.setAttribute("emailUsuario", usuario.getEmail());
+                session.setAttribute("rolUsuario", usuario.getRol());
                 
-                // Redirigir a servicios
-                return "redirect:/servicios";
+                // ✅ Redirigir según el rol del usuario
+                if (usuario.isAdmin()) {
+                    // Si es ADMIN, redirigir al panel de administrador
+                    return "redirect:/admin/dashboard";
+                } else {
+                    // Si es USER normal, redirigir a servicios
+                    return "redirect:/servicios";
+                }
             }
         }
         

@@ -27,17 +27,17 @@ public class ProfesionalService {
         return profesionalRepository.findById(id);
     }
     
-    // Buscar profesionales por especialidad
-    public List<Profesional> buscarPorEspecialidad(String especialidad) {
-        return profesionalRepository.findByEspecialidadContainingIgnoreCase(especialidad);
-    }
-    
-    // Guardar profesional
+    // Guardar/actualizar profesional (JPA detecta si es nuevo o actualización)
     public Profesional guardar(Profesional profesional) {
         return profesionalRepository.save(profesional);
     }
     
-    // Eliminar profesional
+    // Actualizar profesional (alias del método guardar)
+    public Profesional actualizar(Profesional profesional) {
+        return profesionalRepository.save(profesional);
+    }
+    
+    // Eliminar profesional por ID
     public void eliminar(Long id) {
         profesionalRepository.deleteById(id);
     }

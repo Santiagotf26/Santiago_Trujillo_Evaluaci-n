@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Profesionales - Clínica Admin</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/admin.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+			<!-- Sidebar -->
+			<nav class="admin-sidebar">
+			    <div class="admin-sidebar-header">
+			        <i class="fas fa-heartbeat fa-3x mb-2" style="color: #59ab6e;"></i>
+			        <h4>Clínica Admin</h4>
+			        <small>Panel de Control</small>
+			    </div>
+			    
+			    <div class="pt-4">
+			        <ul class="nav flex-column">
+			            <li class="nav-item">
+			                <a class="nav-link" th:href="@{/admin/dashboard}">
+			                    <i class="fas fa-tachometer-alt"></i> Dashboard
+			                </a>
+			            </li>
+			            <li class="nav-item">
+			                <a class="nav-link" th:href="@{/admin/usuarios}">
+			                    <i class="fas fa-users"></i> Usuarios
+			                </a>
+			            </li>
+			            <li class="nav-item">
+			                <a class="nav-link" th:href="@{/admin/profesionales}">
+			                    <i class="fas fa-user-md"></i> Profesionales
+			                </a>
+			            </li>
+			            <li class="nav-item">
+			                <a class="nav-link" th:href="@{/admin/servicios}">
+			                    <i class="fas fa-briefcase-medical"></i> Servicios
+			                </a>
+			            </li>
+			            <!-- ✅ NUEVO: Enlace a Citas -->
+			            <li class="nav-item">
+			                <a class="nav-link" th:href="@{/admin/citas}">
+			                    <i class="fas fa-calendar-check"></i> Citas
+			                </a>
+			            </li>
+			            <li class="nav-item mt-4 pt-4" style="border-top: 1px solid rgba(255,255,255,0.1);">
+			                <a class="nav-link" th:href="@{/}">
+			                    <i class="fas fa-home"></i> Ir al Sitio Web
+			                </a>
+			            </li>
+			        </ul>
+			    </div>
+			</nav>
+
+
+            <!-- Main Content -->
+            <main class="admin-main">
+				<!-- Mensajes Flash -->
+				<div th:if="${mensaje}" class="alert alert-dismissible fade show" 
+				     th:classappend="${tipo == 'success'} ? 'alert-success' : 'alert-danger'" 
+				     role="alert">
+				    <i class="fas" th:classappend="${tipo == 'success'} ? 'fa-check-circle' : 'fa-exclamation-triangle'"></i>
+				    <span th:text="${mensaje}"></span>
+				    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+				</div>
+
+                <div class="admin-page-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2><i class="fas fa-user-md" style="color: #59ab6e;"></i> Gestión de Profesionales</h2>
+                            <p class="text-muted mb-0" style="font-size: 14px !important;">
+                                Personal médico y especialistas registrados
+                            </p>
+                        </div>
+                        <div>
+                            <button class="btn btn-admin-primary" onclick="location.reload()">
+                                <i class="fas fa-sync-alt"></i> Actualizar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Summary -->
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <div class="card admin-stats-card card-success">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-2" style="font-size: 14px !important; opacity: 0.9;">Total de Profesionales</h6>
+                                        <h2 class="mb-0" style="font-size: 42px !important; font-weight: 500 !important;" th:text="${#lists.size(profesionales)}">0</h2>
+                                    </div>
+                                    <div class="admin-stats-icon">
+                                        <i class="fas fa-user-md"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profesionales Table -->
+                <div class="admin-table-card">
+                    <div class="card-header">
+                        <i class="fas fa-list"></i> Lista de Profesionales
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th style="font-size: 16px !important;">ID</th>
+                                        <th style="font-size: 16px !important;">Nombre</th>
+                                        <th style="font-size: 16px !important;">Especialidad</th>
+                                        <th style="font-size: 16px !important;">Email</th>
+                                        <th style="font-size: 16px !important;">Teléfono</th>
+                                        <th style="font-size: 16px !important;">Horario</th>
+                                        <th style="font-size: 16px !important; text-align: center;">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="profesional : ${profesionales}">
+                                        <td style="font-size: 16px !important;">
+                                            <strong th:text="${profesional.id}"></strong>
+                                        </td>
+                                        <td style="font-size: 16px !important;">
+                                            <i class="fas fa-stethoscope me-2" style="color: #59ab6e;"></i>
+                                            <span th:text="${profesional.usuario != null ? profesional.usuario.nombre : 'N/A'}"></span>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-admin badge-admin-success" th:text="${profesional.especialidad}"></span>
+                                        </td>
+                                        <td style="font-size: 16px !important;">
+                                            <i class="far fa-envelope me-2"></i>
+                                            <span th:text="${profesional.usuario != null ? profesional.usuario.email : 'N/A'}"></span>
+                                        </td>
+                                        <td style="font-size: 16px !important;">
+                                            <i class="fas fa-phone me-2"></i>
+                                            <span th:text="${profesional.usuario != null ? profesional.usuario.telefono : 'N/A'}"></span>
+                                        </td>
+                                        <td style="font-size: 16px !important;">
+                                            <i class="far fa-clock me-2"></i>
+                                            <span th:text="${profesional.horarioDisponible != null ? #temporals.format(profesional.horarioDisponible, 'dd/MM/yyyy HH:mm') : 'No disponible'}"></span>
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <!-- Botón Editar -->
+                                            <a th:href="@{/admin/profesionales/editar/{id}(id=${profesional.id})}" 
+                                               class="btn btn-action btn-edit"
+                                               title="Editar profesional">
+                                                <i class="fas fa-edit"></i> Editar
+                                            </a>
+                                            
+                                            <!-- Botón Eliminar -->
+                                            <button type="button" 
+                                                    class="btn btn-action btn-delete"
+                                                    data-bs-toggle="modal" 
+                                                    th:attr="data-bs-target='#deleteProfModal' + ${profesional.id}"
+                                                    title="Eliminar profesional">
+                                                <i class="fas fa-trash"></i> Eliminar
+                                            </button>
+                                            
+                                            <!-- Modal de Confirmación -->
+                                            <div class="modal fade modal-delete" th:id="'deleteProfModal' + ${profesional.id}" tabindex="-1">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">
+                                                                <i class="fas fa-exclamation-triangle"></i> Confirmar Eliminación
+                                                            </h5>
+                                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p style="font-size: 16px !important;">
+                                                                ¿Está seguro de que desea eliminar al profesional 
+                                                                <strong th:text="${profesional.usuario != null ? profesional.usuario.nombre : 'N/A'}"></strong>
+                                                                con especialidad en <strong th:text="${profesional.especialidad}"></strong>?
+                                                            </p>
+                                                            <p class="text-muted mb-0" style="font-size: 14px !important;">
+                                                                Esta acción no se puede deshacer.
+                                                            </p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                            <a th:href="@{/admin/profesionales/eliminar/{id}(id=${profesional.id})}" 
+                                                               class="btn btn-danger">
+                                                                <i class="fas fa-trash"></i> Eliminar
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(profesionales)}">
+                                        <td colspan="7" class="admin-empty-state">
+                                            <i class="fas fa-inbox"></i>
+                                            <p>No hay profesionales registrados en el sistema</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -18,7 +18,7 @@ public class Usuario {
     
     @NotBlank(message = "El email es obligatorio")
     @Email(message = "El email debe ser válido")
-    @Column(unique = true)  // Evita emails duplicados
+    @Column(unique = true)
     private String email;
     
     @NotBlank(message = "La contraseña es obligatoria")
@@ -31,8 +31,13 @@ public class Usuario {
     @Column(name = "fecha_registro")
     private LocalDateTime fechaRegistro;
     
+    // ✅ NUEVO: Campo para el rol del usuario
+    @Column(nullable = false)
+    private String rol = "USER"; // Valor por defecto: USER
+    
     public Usuario() {
         this.fechaRegistro = LocalDateTime.now();
+        this.rol = "USER"; // Por defecto todos son usuarios normales
     }
     
     // Getters y Setters
@@ -54,5 +59,14 @@ public class Usuario {
     public LocalDateTime getFechaRegistro() { return fechaRegistro; }
     public void setFechaRegistro(LocalDateTime fechaRegistro) { 
         this.fechaRegistro = fechaRegistro; 
+    }
+    
+    // ✅ NUEVO: Getter y Setter para rol
+    public String getRol() { return rol; }
+    public void setRol(String rol) { this.rol = rol; }
+    
+    // ✅ NUEVO: Método de conveniencia para verificar si es admin
+    public boolean isAdmin() {
+        return "ADMIN".equalsIgnoreCase(this.rol);
     }
 }

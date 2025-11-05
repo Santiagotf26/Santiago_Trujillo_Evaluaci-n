@@ -41,20 +41,18 @@
     <!-- Close Top Nav -->
 
 
-    <!-- Header -->
-	<!-- Header con Dropdown de Usuario -->
+	<!-- Header -->
 	<nav class="navbar navbar-expand-lg navbar-light shadow">
 	    <div class="container d-flex justify-content-between align-items-center">
-
 	        <a class="navbar-brand text-success logo h1 align-self-center" th:href="@{/}">
-	            Spa
+	            <i class="fa fa-spa me-2"></i>Spa Wellness
 	        </a>
 
-	        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#templatemo_main_nav" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#templatemo_main_nav">
 	            <span class="navbar-toggler-icon"></span>
 	        </button>
 
-	        <div class="align-self-center collapse navbar-collapse flex-fill  d-lg-flex justify-content-lg-between" id="templatemo_main_nav">
+	        <div class="align-self-center collapse navbar-collapse flex-fill d-lg-flex justify-content-lg-between" id="templatemo_main_nav">
 	            <div class="flex-fill">
 	                <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
 	                    <li class="nav-item">
@@ -63,38 +61,52 @@
 	                    <li class="nav-item">
 	                        <a class="nav-link" th:href="@{/about}">Nosotros</a>
 	                    </li>
-	                    <li class="nav-item">
+	                    
+	                    <!-- ✅ SERVICIOS: Solo visible si está logueado -->
+	                    <li class="nav-item" th:if="${session.usuarioLogueado != null}">
 	                        <a class="nav-link" th:href="@{/servicios}">Servicios</a>
 	                    </li>
+	                    
+	                    <!-- ✅ MIS CITAS: Solo visible si está logueado -->
+	                    <li class="nav-item" th:if="${session.usuarioLogueado != null}">
+	                        <a class="nav-link" th:href="@{/citas/mis-citas}">
+	                            <i class="fa fa-calendar-check"></i> Mis Citas
+	                        </a>
+	                    </li>
+	                    
 	                    <li class="nav-item">
 	                        <a class="nav-link" th:href="@{/contact}">Contacto</a>
 	                    </li>
 	                </ul>
 	            </div>
 	            
-	            <!-- Menú desplegable de Usuario -->
-	            <div class="navbar align-self-center">
-	                <ul class="navbar-nav">
-	                    <li class="nav-item dropdown">
-	                        <a class="nav-link dropdown-toggle text-success" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-	                            <i class="fa fa-user fa-lg"></i> Mi Cuenta
-	                        </a>
-	                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-	                            <li><a class="dropdown-item" th:href="@{/login}"><i class="fa fa-sign-in-alt"></i> Iniciar Sesión</a></li>
-	                            <li><a class="dropdown-item" th:href="@{/usuarios/registro}"><i class="fa fa-user-plus"></i> Registrarse</a></li>
-	                            <li><hr class="dropdown-divider"></li>
-	                            <li><a class="dropdown-item" th:href="@{/mis-citas}"><i class="fa fa-calendar"></i> Mis Citas</a></li>
-	                        </ul>
-	                    </li>
-	                </ul>
+	            <!-- Sección de usuario logueado/no logueado -->
+	            <div class="navbar align-self-center d-flex">
+	                <!-- Usuario logueado -->
+	                <div th:if="${session.usuarioLogueado != null}">
+	                    <span class="text-success me-3">
+	                        <i class="fa fa-user-circle fa-lg"></i> 
+	                        <strong><span th:text="${session.nombreUsuario}"></span></strong>
+	                    </span>
+	                    <a th:href="@{/usuarios/logout}" class="btn btn-outline-danger btn-sm">
+	                        <i class="fa fa-sign-out-alt"></i> Cerrar Sesión
+	                    </a>
+	                </div>
+	                
+	                <!-- Usuario no logueado -->
+	                <div th:unless="${session.usuarioLogueado != null}">
+	                    <a th:href="@{/login}" class="btn btn-outline-success btn-sm me-2">
+	                        <i class="fa fa-sign-in-alt"></i> Iniciar Sesión
+	                    </a>
+	                    <a th:href="@{/usuarios/registro}" class="btn btn-success btn-sm">
+	                        <i class="fa fa-user-plus"></i> Registrarse
+	                    </a>
+	                </div>
 	            </div>
 	        </div>
-
 	    </div>
 	</nav>
 	<!-- Close Header -->
-
-    <!-- Close Header -->
 
     <!-- Modal -->
     <div class="modal fade bg-white" id="templatemo_search" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

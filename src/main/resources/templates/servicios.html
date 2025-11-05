@@ -33,49 +33,72 @@
     </nav>
     <!-- Close Top Nav -->
 
-    <!-- Header -->
-    <nav class="navbar navbar-expand-lg navbar-light shadow">
-        <div class="container d-flex justify-content-between align-items-center">
-            <a class="navbar-brand text-success logo h1 align-self-center" th:href="@{/}">
-                Spa Wellness
-            </a>
+	<!-- Header -->
+	<nav class="navbar navbar-expand-lg navbar-light shadow">
+	    <div class="container d-flex justify-content-between align-items-center">
+	        <a class="navbar-brand text-success logo h1 align-self-center" th:href="@{/}">
+	            <i class="fa fa-spa me-2"></i>Spa Wellness
+	        </a>
 
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#templatemo_main_nav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+	        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#templatemo_main_nav">
+	            <span class="navbar-toggler-icon"></span>
+	        </button>
 
-            <div class="align-self-center collapse navbar-collapse flex-fill d-lg-flex justify-content-lg-between" id="templatemo_main_nav">
-                <div class="flex-fill">
-                    <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/}">Inicio</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/about}">Nosotros</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" th:href="@{/servicios}">Servicios</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/contact}">Contacto</a>
-                        </li>
-                    </ul>
-                </div>
-                
-                <!-- Usuario logueado -->
-                <div class="navbar align-self-center d-flex align-items-center">
-                    <span class="text-success me-3">
-                        <i class="fa fa-user-circle fa-lg"></i> 
-                        <strong><span th:text="${nombreUsuario}"></span></strong>
-                    </span>
-                    <a th:href="@{/usuarios/logout}" class="btn btn-outline-danger btn-sm">
-                        <i class="fa fa-sign-out-alt"></i> Cerrar Sesión
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
-    <!-- Close Header -->
+	        <div class="align-self-center collapse navbar-collapse flex-fill d-lg-flex justify-content-lg-between" id="templatemo_main_nav">
+	            <div class="flex-fill">
+	                <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
+	                    <li class="nav-item">
+	                        <a class="nav-link" th:href="@{/}">Inicio</a>
+	                    </li>
+	                    <li class="nav-item">
+	                        <a class="nav-link" th:href="@{/about}">Nosotros</a>
+	                    </li>
+	                    
+	                    <!-- ✅ SERVICIOS: Solo visible si está logueado -->
+	                    <li class="nav-item" th:if="${session.usuarioLogueado != null}">
+	                        <a class="nav-link" th:href="@{/servicios}">Servicios</a>
+	                    </li>
+	                    
+	                    <!-- ✅ MIS CITAS: Solo visible si está logueado -->
+	                    <li class="nav-item" th:if="${session.usuarioLogueado != null}">
+	                        <a class="nav-link" th:href="@{/citas/mis-citas}">
+	                            <i class="fa fa-calendar-check"></i> Mis Citas
+	                        </a>
+	                    </li>
+	                    
+	                    <li class="nav-item">
+	                        <a class="nav-link" th:href="@{/contact}">Contacto</a>
+	                    </li>
+	                </ul>
+	            </div>
+	            
+	            <!-- Sección de usuario logueado/no logueado -->
+	            <div class="navbar align-self-center d-flex">
+	                <!-- Usuario logueado -->
+	                <div th:if="${session.usuarioLogueado != null}">
+	                    <span class="text-success me-3">
+	                        <i class="fa fa-user-circle fa-lg"></i> 
+	                        <strong><span th:text="${session.nombreUsuario}"></span></strong>
+	                    </span>
+	                    <a th:href="@{/usuarios/logout}" class="btn btn-outline-danger btn-sm">
+	                        <i class="fa fa-sign-out-alt"></i> Cerrar Sesión
+	                    </a>
+	                </div>
+	                
+	                <!-- Usuario no logueado -->
+	                <div th:unless="${session.usuarioLogueado != null}">
+	                    <a th:href="@{/login}" class="btn btn-outline-success btn-sm me-2">
+	                        <i class="fa fa-sign-in-alt"></i> Iniciar Sesión
+	                    </a>
+	                    <a th:href="@{/usuarios/registro}" class="btn btn-success btn-sm">
+	                        <i class="fa fa-user-plus"></i> Registrarse
+	                    </a>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</nav>
+	<!-- Close Header -->
 
     <!-- Start Content Page -->
     <div class="container-fluid bg-success py-5 text-white">

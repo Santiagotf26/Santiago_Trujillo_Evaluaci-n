@@ -18,8 +18,8 @@
 </head>
 
 <body>
-    <!-- Top Nav -->
-    <nav class="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block">
+    <!-- Start Top Nav -->
+    <nav class="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block" id="templatemo_nav_top">
         <div class="container text-light">
             <div class="w-100 d-flex justify-content-between">
                 <div>
@@ -31,111 +31,217 @@
             </div>
         </div>
     </nav>
+    <!-- Close Top Nav -->
 
-    <!-- Header -->
-    <nav class="navbar navbar-expand-lg navbar-light shadow">
-        <div class="container d-flex justify-content-between align-items-center">
-            <a class="navbar-brand text-success logo h1" th:href="@{/}">
-                Spa Wellness
-            </a>
+	<!-- Header -->
+	<nav class="navbar navbar-expand-lg navbar-light shadow">
+	    <div class="container d-flex justify-content-between align-items-center">
+	        <a class="navbar-brand text-success logo h1 align-self-center" th:href="@{/}">
+	            <i class="fa fa-spa me-2"></i>Spa Wellness
+	        </a>
 
-            <div class="navbar align-self-center">
-                <span class="text-success me-3">
-                    <i class="fa fa-user-circle fa-lg"></i> 
-                    <strong th:text="${nombreUsuario}">Usuario</strong>
-                </span>
-                <a th:href="@{/usuarios/logout}" class="btn btn-outline-danger btn-sm">
-                    <i class="fa fa-sign-out-alt"></i> Cerrar Sesión
-                </a>
-            </div>
+	        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#templatemo_main_nav">
+	            <span class="navbar-toggler-icon"></span>
+	        </button>
+
+	        <div class="align-self-center collapse navbar-collapse flex-fill d-lg-flex justify-content-lg-between" id="templatemo_main_nav">
+	            <div class="flex-fill">
+	                <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
+	                    <li class="nav-item">
+	                        <a class="nav-link" th:href="@{/}">Inicio</a>
+	                    </li>
+	                    <li class="nav-item">
+	                        <a class="nav-link" th:href="@{/about}">Nosotros</a>
+	                    </li>
+	                    
+	                    <!-- ✅ SERVICIOS: Solo visible si está logueado -->
+	                    <li class="nav-item" th:if="${session.usuarioLogueado != null}">
+	                        <a class="nav-link" th:href="@{/servicios}">Servicios</a>
+	                    </li>
+	                    
+	                    <!-- ✅ MIS CITAS: Solo visible si está logueado -->
+	                    <li class="nav-item" th:if="${session.usuarioLogueado != null}">
+	                        <a class="nav-link" th:href="@{/citas/mis-citas}">
+	                            <i class="fa fa-calendar-check"></i> Mis Citas
+	                        </a>
+	                    </li>
+	                    
+	                    <li class="nav-item">
+	                        <a class="nav-link" th:href="@{/contact}">Contacto</a>
+	                    </li>
+	                </ul>
+	            </div>
+	            
+	            <!-- Sección de usuario logueado/no logueado -->
+	            <div class="navbar align-self-center d-flex">
+	                <!-- Usuario logueado -->
+	                <div th:if="${session.usuarioLogueado != null}">
+	                    <span class="text-success me-3">
+	                        <i class="fa fa-user-circle fa-lg"></i> 
+	                        <strong><span th:text="${session.nombreUsuario}"></span></strong>
+	                    </span>
+	                    <a th:href="@{/usuarios/logout}" class="btn btn-outline-danger btn-sm">
+	                        <i class="fa fa-sign-out-alt"></i> Cerrar Sesión
+	                    </a>
+	                </div>
+	                
+	                <!-- Usuario no logueado -->
+	                <div th:unless="${session.usuarioLogueado != null}">
+	                    <a th:href="@{/login}" class="btn btn-outline-success btn-sm me-2">
+	                        <i class="fa fa-sign-in-alt"></i> Iniciar Sesión
+	                    </a>
+	                    <a th:href="@{/usuarios/registro}" class="btn btn-success btn-sm">
+	                        <i class="fa fa-user-plus"></i> Registrarse
+	                    </a>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</nav>
+	<!-- Close Header -->
+
+    <!-- Start Content Page -->
+    <div class="container-fluid bg-success py-5 text-white">
+        <div class="col-md-8 m-auto text-center">
+            <h1 class="h1"><i class="fa fa-calendar-check"></i> Reservar Cita</h1>
+            <p>Completa el formulario para agendar tu cita</p>
         </div>
-    </nav>
+    </div>
 
-    <!-- Content -->
+    <!-- Formulario de Reserva -->
     <div class="container py-5">
-        <div class="row">
-            <div class="col-md-8 m-auto">
-                
-                <h2 class="text-success mb-4">
-                    <i class="fa fa-calendar-check"></i> Reservar Cita
-                </h2>
-                
-                <!-- Card del Servicio -->
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <!-- Información del Servicio -->
                 <div class="card shadow mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0"><i class="fa fa-info-circle"></i> Detalles del Servicio</h4>
+                    </div>
                     <div class="card-body">
-                        <h4 class="text-success" th:text="${servicio.nombre}">Servicio</h4>
-                        <p th:text="${servicio.descripcion}">Descripción</p>
-                        <hr>
-                        <p>
-                            <i class="fa fa-clock text-success"></i>
-                            <strong>Duración:</strong> <span th:text="${servicio.duracion}">60 min</span>
-                        </p>
-                        <p>
-                            <i class="fa fa-dollar-sign text-success"></i>
-                            <strong>Precio:</strong> $<span th:text="${servicio.precio}">50.00</span>
-                        </p>
+                        <h3 class="text-success" th:text="${servicio.nombre}">Nombre del Servicio</h3>
+                        <p th:text="${servicio.descripcion}">Descripción del servicio</p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-2">
+                                    <i class="fa fa-clock text-success"></i> 
+                                    <strong>Duración:</strong> <span th:text="${servicio.duracion}">60 min</span>
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-2">
+                                    <i class="fa fa-dollar-sign text-success"></i> 
+                                    <strong>Precio:</strong> $<span th:text="${#numbers.formatDecimal(servicio.precio, 1, 2)}">0.00</span>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                
-                <!-- Formulario -->
+
+                <!-- Formulario de Reserva -->
                 <div class="card shadow">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0"><i class="fa fa-calendar-plus"></i> Datos de la Cita</h4>
+                    </div>
                     <div class="card-body">
-                        <h5 class="mb-4">Complete los datos de su cita</h5>
-                        
                         <form th:action="@{/citas/reservar}" method="post">
+                            
+                            <!-- Campo oculto con el ID del servicio -->
                             <input type="hidden" name="servicioId" th:value="${servicio.id}">
                             
-                            <div class="mb-3">
-                                <label for="fechaHora" class="form-label">
-                                    <i class="fa fa-calendar"></i> Fecha y Hora
-                                </label>
-                                <input type="datetime-local" class="form-control" 
-                                       id="fechaHora" name="fechaHora" required>
-                            </div>
-                            
-                            <div class="mb-3">
+                            <!-- Seleccionar Profesional -->
+                            <div class="mb-4">
                                 <label for="profesionalId" class="form-label">
-                                    <i class="fa fa-user-md"></i> Profesional
+                                    <i class="fa fa-user-md text-success"></i> 
+                                    <strong>Selecciona un Profesional</strong>
                                 </label>
-                                <select class="form-select" id="profesionalId" 
-                                        name="profesionalId" required>
-                                    <option value="">Seleccione un profesional</option>
+                                <select class="form-select form-select-lg" id="profesionalId" name="profesionalId" required>
+                                    <option value="">-- Seleccione un profesional --</option>
                                     <option th:each="profesional : ${profesionales}" 
-                                            th:value="${profesional.id}" 
-                                            th:text="${profesional.especialidad}">
+                                            th:value="${profesional.id}"
+                                            th:text="${profesional.especialidad + ' - ' + profesional.usuario.nombre}">
                                     </option>
                                 </select>
+                                <small class="text-muted">Elige el especialista que te atenderá</small>
                             </div>
                             
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-success btn-lg">
-                                    <i class="fa fa-check-circle"></i> Confirmar Reserva
-                                </button>
-                                <a th:href="@{/servicios}" class="btn btn-outline-secondary">
-                                    <i class="fa fa-arrow-left"></i> Cancelar
+                            <!-- Seleccionar Fecha y Hora -->
+                            <div class="mb-4">
+                                <label for="fechaHora" class="form-label">
+                                    <i class="fa fa-calendar-alt text-success"></i> 
+                                    <strong>Fecha y Hora de la Cita</strong>
+                                </label>
+                                <input type="datetime-local" 
+                                       class="form-control form-control-lg" 
+                                       id="fechaHora" 
+                                       name="fechaHora"
+                                       required
+                                       min="">
+                                <small class="text-muted">Selecciona la fecha y hora preferida para tu cita</small>
+                            </div>
+                            
+                            <!-- Información del Usuario -->
+                            <div class="alert alert-info">
+                                <i class="fa fa-info-circle"></i> 
+                                <strong>Usuario:</strong> <span th:text="${nombreUsuario}"></span>
+                            </div>
+                            
+                            <!-- Botones -->
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-between mt-4">
+                                <a th:href="@{/servicios}" class="btn btn-outline-secondary btn-lg">
+                                    <i class="fa fa-arrow-left"></i> Volver a Servicios
                                 </a>
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="fa fa-check-circle"></i> Agendar Cita
+                                </button>
                             </div>
                         </form>
                     </div>
                 </div>
-                
+
+                <!-- Nota importante -->
+                <div class="alert alert-warning mt-4">
+                    <h5 class="alert-heading"><i class="fa fa-exclamation-triangle"></i> Importante</h5>
+                    <ul class="mb-0">
+                        <li>La cita estará sujeta a confirmación del profesional</li>
+                        <li>Recibirás una notificación cuando tu cita sea confirmada</li>
+                        <li>Por favor, llega 10 minutos antes de tu cita</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
+    <!-- End Content -->
 
-    <!-- Footer -->
-    <footer class="bg-dark mt-5">
+    <!-- Start Footer -->
+    <footer class="bg-dark" id="tempaltemo_footer">
         <div class="w-100 bg-black py-3">
             <div class="container">
-                <p class="text-left text-light">
-                    Copyright &copy; 2025 Spa Wellness
-                </p>
+                <div class="row pt-2">
+                    <div class="col-12">
+                        <p class="text-left text-light">
+                            Copyright &copy; 2025 Spa Wellness
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
+    <!-- End Footer -->
 
+    <!-- Start Script -->
     <script th:src="@{/assets/js/jquery-1.11.0.min.js}"></script>
     <script th:src="@{/assets/js/bootstrap.bundle.min.js}"></script>
+    
+    <!-- Script para establecer fecha mínima (hoy) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var fechaInput = document.getElementById('fechaHora');
+            var now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            fechaInput.min = now.toISOString().slice(0, 16);
+        });
+    </script>
+    <!-- End Script -->
 </body>
 
 </html>
