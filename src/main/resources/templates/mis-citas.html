@@ -184,12 +184,13 @@
                                     <i class="fa fa-calendar"></i> 
                                     Cita #<span th:text="${cita.id}"></span>
                                 </h5>
-                                <span class="badge" 
-                                      th:classappend="${cita.estado == 'PENDIENTE'} ? 'badge-pendiente' : 
-                                                      ${cita.estado == 'CONFIRMADA'} ? 'badge-confirmada' : 
-                                                      ${cita.estado == 'COMPLETADA'} ? 'badge-completada' : 'badge-cancelada'"
-                                      th:text="${cita.estado}">
-                                </span>
+								<span class="badge" 
+								      th:classappend="${cita.estado == 'PENDIENTE' ? 'badge-pendiente' : 
+								                        cita.estado == 'CONFIRMADA' ? 'badge-confirmada' : 
+								                        cita.estado == 'COMPLETADA' ? 'badge-completada' : 'badge-cancelada'}"
+								      th:text="${cita.estado}">
+								</span>
+
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title text-success" th:text="${cita.servicio.nombre}">Servicio</h5>
