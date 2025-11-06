@@ -36,32 +36,21 @@ public class AdminController {
         this.citaService = citaService;
     }
     
-    // ========== SEGURIDAD: Verificar acceso de administrador ==========
-    
-    /**
-     * Método que se ejecuta ANTES de cada petición al AdminController
-     * Verifica que el usuario tenga rol de ADMIN
-     */
-    @ModelAttribute
-    public void verificarAccesoAdmin(HttpSession session) {
-        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
-        
-        // Si no hay usuario en sesión o no es ADMIN, redirigir al login
-        if (usuarioLogueado == null || !usuarioLogueado.isAdmin()) {
-            throw new RuntimeException("Acceso denegado. Solo administradores pueden acceder a esta sección.");
-        }
-    }
-    
     // ========== DASHBOARD ==========
     
     @GetMapping("/dashboard")
     public String mostrarDashboard(Model model, HttpSession session) {
         Usuario admin = (Usuario) session.getAttribute("usuarioLogueado");
-        model.addAttribute("nombreAdmin", admin.getNombre());
+        
+        if (admin != null) {
+            model.addAttribute("nombreAdmin", admin.getNombre());
+        }
+        
         model.addAttribute("usuarios", usuarioService.listarTodos());
         model.addAttribute("profesionales", profesionalService.listarTodos());
         model.addAttribute("servicios", servicioService.listarTodos());
         model.addAttribute("citas", citaService.listarTodas());
+        
         return "admin/dashboard";
     }
     
@@ -141,7 +130,7 @@ public class AdminController {
             Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
             
             // Evitar que el admin se elimine a sí mismo
-            if (usuarioLogueado.getId().equals(id)) {
+            if (usuarioLogueado != null && usuarioLogueado.getId().equals(id)) {
                 redirectAttributes.addFlashAttribute("mensaje", "No puedes eliminarte a ti mismo");
                 redirectAttributes.addFlashAttribute("tipo", "warning");
                 return "redirect:/admin/usuarios";
