@@ -158,7 +158,7 @@
             <!-- Iterar sobre los servicios desde la base de datos -->
             <div th:each="servicio : ${servicios}" class="col-12 col-md-4 mb-4">
                 <div class="card h-100 shadow">
-                    <img th:src="@{/assets/img/feature_prod_01.jpg}" class="card-img-top" alt="Servicio">
+                    <img th:src="@{/assets/img/default.jpg}" class="card-img-top" alt="Servicio de spa">
                     <div class="card-body">
                         <h3 class="card-title text-success" th:text="${servicio.nombre}">Nombre del Servicio</h3>
                         <p class="card-text" th:text="${servicio.descripcion}">

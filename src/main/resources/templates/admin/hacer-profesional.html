@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Convertir en Profesional</title>
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container mt-4">
+    <h1 class="h3 mb-4">Convertir usuario en profesional</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <p><strong>Usuario:</strong> <span th:text="${usuario.nombre}"></span> (<span th:text="${usuario.email}"></span>)</p>
+
+            <form th:action="@{'/admin/usuarios/' + ${usuario.id} + '/hacer-profesional'}" th:object="${profesional}" method="post">
+                <div class="mb-3">
+                    <label for="especialidad" class="form-label">Especialidad</label>
+                    <input type="text" id="especialidad" name="especialidad" class="form-control"
+                           th:value="*{especialidad}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="horarioDisponible" class="form-label">Horario disponible (opcional)</label>
+                    <input type="datetime-local" id="horarioDisponible" name="horarioDisponible" class="form-control">
+                    <div class="form-text">Formato: aaaa-mm-ddThh:mm (ejemplo: 2025-11-20T10:00)</div>
+                </div>
+
+                <button type="submit" class="btn btn-success">Guardar como profesional</button>
+                <a th:href="@{/admin/usuarios}" class="btn btn-secondary ms-2">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

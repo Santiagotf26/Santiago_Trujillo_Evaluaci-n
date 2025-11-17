@@ -219,6 +219,26 @@ public class AdminController {
     
     // ========== EDICIÓN DE SERVICIOS ==========
 
+    @GetMapping("/servicios/nuevo")
+    public String mostrarFormularioNuevoServicio(Model model) {
+        model.addAttribute("servicio", new Servicio());
+        return "admin/nuevo-servicio";
+    }
+
+    @PostMapping("/servicios/nuevo")
+    public String crearServicio(@ModelAttribute("servicio") Servicio servicio,
+                                RedirectAttributes redirectAttributes) {
+        try {
+            servicioService.guardar(servicio);
+            redirectAttributes.addFlashAttribute("mensaje", "Servicio creado correctamente");
+            redirectAttributes.addFlashAttribute("tipo", "success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", "Error al crear servicio: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("tipo", "danger");
+        }
+        return "redirect:/admin/servicios";
+    }
+
     @GetMapping("/servicios/editar/{id}")
     public String mostrarFormularioEditarServicio(@PathVariable Long id, Model model) {
         Servicio servicio = servicioService.buscarPorId(id)
@@ -272,7 +292,7 @@ public class AdminController {
         
         return "redirect:/admin/servicios";
     }
-    
+
     // ========== GESTIÓN DE CITAS ==========
 
     @GetMapping("/citas/editar/{id}")
@@ -347,5 +367,53 @@ public class AdminController {
         }
         
         return "redirect:/admin/citas";
+    }
+
+    // ========== CONVERTIR USUARIO EN PROFESIONAL ==========
+
+    @GetMapping("/usuarios/{id}/hacer-profesional")
+    public String mostrarFormularioHacerProfesional(@PathVariable Long id, Model model) {
+        Usuario usuario = usuarioService.buscarPorId(id)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + id));
+
+        Profesional profesional = new Profesional();
+        profesional.setUsuario(usuario);
+
+        model.addAttribute("usuario", usuario);
+        model.addAttribute("profesional", profesional);
+
+        return "admin/hacer-profesional";
+    }
+
+    @PostMapping("/usuarios/{id}/hacer-profesional")
+    public String hacerProfesional(@PathVariable Long id,
+                                   @ModelAttribute("profesional") Profesional profesionalForm,
+                                   @RequestParam(value = "horarioDisponible", required = false) String horarioDisponibleStr,
+                                   RedirectAttributes redirectAttributes) {
+        try {
+            Usuario usuario = usuarioService.buscarPorId(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+            Profesional profesional = new Profesional();
+            profesional.setUsuario(usuario);
+            profesional.setEspecialidad(profesionalForm.getEspecialidad());
+
+            if (horarioDisponibleStr != null && !horarioDisponibleStr.isEmpty()) {
+                profesional.setHorarioDisponible(LocalDateTime.parse(horarioDisponibleStr));
+            }
+
+            profesionalService.guardar(profesional);
+
+            usuario.setRol("PROFESIONAL");
+            usuarioService.actualizar(usuario);
+
+            redirectAttributes.addFlashAttribute("mensaje", "Usuario convertido en profesional correctamente");
+            redirectAttributes.addFlashAttribute("tipo", "success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", "Error al convertir en profesional: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("tipo", "danger");
+        }
+
+        return "redirect:/admin/usuarios";
     }
 }

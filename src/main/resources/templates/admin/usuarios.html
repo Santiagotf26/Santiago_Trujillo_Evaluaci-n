@@ -151,9 +151,16 @@
                                         <td style="text-align: center;">
                                             <!-- Botón Editar -->
                                             <a th:href="@{/admin/usuarios/editar/{id}(id=${usuario.id})}" 
-                                               class="btn btn-action btn-edit"
+                                               class="btn btn-action btn-edit mb-1"
                                                title="Editar usuario">
                                                 <i class="fas fa-edit"></i> Editar
+                                            </a>
+
+                                            <!-- Botón Hacer Profesional -->
+                                            <a th:href="@{/admin/usuarios/{id}/hacer-profesional(id=${usuario.id})}"
+                                               class="btn btn-action btn-success mb-1"
+                                               title="Convertir en profesional">
+                                                <i class="fas fa-user-md"></i> Hacer profesional
                                             </a>
                                             
                                             <!-- Botón Eliminar -->

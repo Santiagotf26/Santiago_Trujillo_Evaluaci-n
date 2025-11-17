@@ -19,11 +19,13 @@ public class UsuarioService {
     
     // Guardar/actualizar usuario en la base de datos
     public Usuario registrar(Usuario usuario) {
+        // Se guarda la contraseña tal cual llega (texto plano)
         return usuarioRepository.save(usuario);
     }
     
     // Actualizar usuario (igual que registrar, JPA detecta si existe por el ID)
     public Usuario actualizar(Usuario usuario) {
+        // Se guarda la contraseña tal cual llega (texto plano)
         return usuarioRepository.save(usuario);
     }
     
