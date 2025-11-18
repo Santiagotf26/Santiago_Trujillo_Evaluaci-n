@@ -46,11 +46,11 @@
 
             <div class="align-self-center collapse navbar-collapse flex-fill d-lg-flex justify-content-lg-between" id="templatemo_main_nav">
                 <div class="flex-fill">
-                    <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
-                        <li class="nav-item">
+                    <ul class="nav navbar-nav d-flex align-items-center gap-3 mx-lg-auto">
+                        <li class="nav-item" th:if="${session.rolUsuario != 'PROFESIONAL'}">
                             <a class="nav-link" th:href="@{/}">Inicio</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" th:if="${session.rolUsuario != 'PROFESIONAL'}">
                             <a class="nav-link" th:href="@{/about}">Nosotros</a>
                         </li>
                         
@@ -65,8 +65,15 @@
                                 <i class="fa fa-calendar-check"></i> Mis Citas
                             </a>
                         </li>
+
+                        <!-- CITAS COMO PROFESIONAL: Solo visible si el rol es PROFESIONAL -->
+                        <li class="nav-item" th:if="${session.rolUsuario == 'PROFESIONAL'}">
+                            <a class="nav-link" th:href="@{/profesional/citas}">
+                                <i class="fa fa-user-md"></i> Citas como Profesional
+                            </a>
+                        </li>
                         
-                        <li class="nav-item">
+                        <li class="nav-item" th:if="${session.rolUsuario != 'PROFESIONAL'}">
                             <a class="nav-link" th:href="@{/contact}">Contacto</a>
                         </li>
                     </ul>

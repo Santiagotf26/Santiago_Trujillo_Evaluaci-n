@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.model.Cita;
 import com.example.demo.model.Usuario;
+import com.example.demo.model.Profesional;
 import com.example.demo.repository.CitaRepository;
 import com.example.demo.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
@@ -50,6 +51,14 @@ public class CitaService {
     
     public List<Cita> listarPorUsuarioOrdenadas(Usuario usuario) {
         return citaRepository.findByUsuarioOrderByFechaHoraDesc(usuario);
+    }
+
+    public List<Cita> listarPorProfesional(Profesional profesional) {
+        return citaRepository.findByProfesional(profesional);
+    }
+
+    public List<Cita> listarPorProfesionalOrdenadas(Profesional profesional) {
+        return citaRepository.findByProfesionalOrderByFechaHoraDesc(profesional);
     }
     
     public void eliminar(Long id) {

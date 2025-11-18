@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Profesional;
+import com.example.demo.model.Usuario;
 import com.example.demo.repository.ProfesionalRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,5 +41,10 @@ public class ProfesionalService {
     // Eliminar profesional por ID
     public void eliminar(Long id) {
         profesionalRepository.deleteById(id);
+    }
+
+    // Buscar profesional a partir del usuario asociado
+    public Profesional buscarPorUsuario(Usuario usuario) {
+        return profesionalRepository.findByUsuario(usuario);
     }
 }

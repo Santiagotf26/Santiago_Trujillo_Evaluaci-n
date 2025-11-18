@@ -1,3 +1,41 @@
 /*
 Custom Css
 */
+
+/* Modal cancelar cita - estilos específicos para evitar conflictos y efectos lagueados */
+.modal-cancelar-cita .modal-dialog {
+    transition: none !important;
+}
+
+.modal-cancelar-cita .modal-content {
+    border-radius: 10px;
+    background-color: #ffffff !important;
+    color: #212529;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.modal-cancelar-cita .modal-header {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+.modal-cancelar-cita .modal-header .modal-title i {
+    margin-right: 8px;
+}
+
+.modal-cancelar-cita .modal-body {
+    background-color: #ffffff;
+}
+
+.modal-cancelar-cita .modal-footer {
+    background-color: #ffffff;
+}
+
+.modal-cancelar-cita .modal-footer .btn {
+    min-width: 140px;
+}
+
+/* Asegurar que el fondo oscuro detrás del modal tenga opacidad adecuada */
+.modal-backdrop.show {
+    opacity: 0.4;
+}

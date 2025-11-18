@@ -69,6 +69,9 @@ public class UsuarioController {
                 if (usuario.isAdmin()) {
                     // Si es ADMIN, redirigir al panel de administrador
                     return "redirect:/admin/dashboard";
+                } else if ("PROFESIONAL".equalsIgnoreCase(usuario.getRol())) {
+                    // Si es PROFESIONAL, redirigir a sus citas
+                    return "redirect:/profesional/citas";
                 } else {
                     // Si es USER normal, redirigir a servicios
                     return "redirect:/servicios";

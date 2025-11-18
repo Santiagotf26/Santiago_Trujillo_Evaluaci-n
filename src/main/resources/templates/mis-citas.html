@@ -80,20 +80,34 @@
 
             <div class="align-self-center collapse navbar-collapse flex-fill d-lg-flex justify-content-lg-between" id="templatemo_main_nav">
                 <div class="flex-fill">
-                    <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
-                        <li class="nav-item">
+                    <ul class="nav navbar-nav d-flex align-items-center gap-3 mx-lg-auto">
+                        <li class="nav-item" th:if="${session.rolUsuario != 'PROFESIONAL'}">
                             <a class="nav-link" th:href="@{/}">Inicio</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" th:if="${session.rolUsuario != 'PROFESIONAL'}">
                             <a class="nav-link" th:href="@{/about}">Nosotros</a>
                         </li>
-                        <li class="nav-item">
+                        
+                        <!-- SERVICIOS: Solo visible si está logueado -->
+                        <li class="nav-item" th:if="${session.usuarioLogueado != null}">
                             <a class="nav-link" th:href="@{/servicios}">Servicios</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" th:href="@{/citas/mis-citas}">Mis Citas</a>
+                        
+                        <!-- MIS CITAS: Solo visible si está logueado -->
+                        <li class="nav-item" th:if="${session.usuarioLogueado != null}">
+                            <a class="nav-link active" th:href="@{/citas/mis-citas}">
+                                <i class="fa fa-calendar-check"></i> Mis Citas
+                            </a>
                         </li>
-                        <li class="nav-item">
+
+                        <!-- CITAS COMO PROFESIONAL: Solo visible si el rol es PROFESIONAL -->
+                        <li class="nav-item" th:if="${session.rolUsuario == 'PROFESIONAL'}">
+                            <a class="nav-link" th:href="@{/profesional/citas}">
+                                <i class="fa fa-user-md"></i> Citas como Profesional
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item" th:if="${session.rolUsuario != 'PROFESIONAL'}">
                             <a class="nav-link" th:href="@{/contact}">Contacto</a>
                         </li>
                     </ul>
@@ -231,7 +245,7 @@
                                     <span class="ms-4">$<span th:text="${#numbers.formatDecimal(cita.servicio.precio, 1, 2)}">0.00</span></span>
                                 </div>
                             </div>
-                            
+
                             <div class="card-footer bg-light" th:if="${cita.estado == 'PENDIENTE'}">
                                 <button type="button" 
                                         class="btn btn-danger btn-sm w-100"
@@ -241,14 +255,14 @@
                                 </button>
                                 
                                 <!-- Modal de Confirmación -->
-                                <div class="modal fade" th:id="'cancelarCitaModal' + ${cita.id}" tabindex="-1">
+                                <div class="modal fade modal-cancelar-cita" th:id="'cancelarCitaModal' + ${cita.id}" tabindex="-1">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
-                                            <div class="modal-header bg-danger text-white">
+                                            <div class="modal-header">
                                                 <h5 class="modal-title">
                                                     <i class="fa fa-exclamation-triangle"></i> Confirmar Cancelación
                                                 </h5>
-                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <p class="mb-3">
